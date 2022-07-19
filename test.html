@@ -1,0 +1,197 @@
+<html>
+<head>
+
+<style>
+ .logo {
+ 	background-image: url(logo.png);
+ 	background-repeat:no-repeat;
+ 	display:block;
+ 	height:500px;
+ 	padding-left: 95px;
+ 	padding-top: 110px;
+ 	
+ }
+ 
+.qno{
+	font-size: 240;
+	align-content: center;
+	font-family: Hei;
+	color:rgb(77, 169, 255);
+} 
+
+.hidden {
+	display:none;
+}
+.non-hidden{
+	display:block;
+}
+.label {
+font-family: Hei;
+font-style:oblique;
+color:rgb(39, 86, 255);
+}
+a {
+	font-family: Hei;
+font-style:oblique;
+color:rgb(19, 86, 255);
+}
+#used_div{
+	margin-top: 10px;
+}
+</style>
+
+</head>
+<body>
+
+	<script>
+		var numbers;
+		var stopFlag = false;
+		var intervalId = 0;
+		
+		
+		function isNumber(value) {
+			var regexp = /^[0-9]+/
+
+			return regexp.test(value);
+		}
+		   
+
+
+		//init();
+
+		function init() {
+			var total_team_count = document.getElementById("totalTeam").value
+			if(isNumber(total_team_count)) {
+				numbers = new Array();
+				var total_temp =  parseInt(total_team_count)+1
+
+				for (var i = 1; i < total_temp; i++) {
+					if(i<10) {
+						numbers.push("0"+i);
+					} else {
+					
+					numbers.push(""+i);
+					}
+				}
+				console.log(numbers);
+				document.getElementById("start").removeAttribute("disabled");
+				document.getElementById("msg_bar").innerText="";
+				document.getElementById("resetAll").removeAttribute("disabled");
+				document.getElementById("confirm").setAttribute("disabled", true);
+			} else {
+				document.getElementById("start").setAttribute("disabled", true);
+				document.getElementById("msg_bar").innerText="Must input a number in Total Team Count"
+			
+			}
+		}
+
+		function start() {
+
+			intervalId = setInterval("update()", 30);
+			document.getElementById("start").setAttribute("disabled", true);
+			document.getElementById("stop").removeAttribute("disabled");
+		}
+
+		function stop() {
+			window.clearInterval(intervalId);
+			var i = document.getElementById("index").innerText;
+			document.getElementById("used").append("," + numbers[i]);
+
+			numbers.splice(i, 1);
+
+			document.getElementById("remain").innerText = numbers.join(",");
+			document.getElementById("start").removeAttribute("disabled");
+			if (numbers.length == 0) {
+				document.getElementById("start").setAttribute("disabled",
+						"true");
+
+			}
+			document.getElementById("stop").setAttribute("disabled", "true");
+
+		}
+
+		function update() {
+			var maxIndex = numbers.length - 1;
+			var index = randomFrom(0, maxIndex);
+			document.getElementById("output").innerText = numbers[index];
+			document.getElementById("qno").innerText = numbers[index];
+			document.getElementById("index").innerText = index;
+		}
+
+		function randomPop() {
+			var maxIndex = numbers.length - 1;
+			var index = randomFrom(0, maxIndex);
+
+		}
+
+		function randomFrom(lowerValue, upperValue) {
+			return Math.floor(Math.random() * (upperValue - lowerValue + 1)
+					+ lowerValue);
+		}
+		
+		
+		document.onkeydown = function(event){
+    if (event.keyCode == "32") {
+    	console.log(event);
+    	        if (document.getElementById("start").getAttribute("disabled")!="disabled" &&  document.getElementById("start").getAttribute("disabled")!="true") {
+        	start();
+        	return false;
+        } else if (document.getElementById("stop").getAttribute("disabled")!="disabled" && document.getElementById("stop").getAttribute("disabled")!="true"){
+        	stop();
+        	return false;
+        }
+    }
+}
+function resetAll(){
+	location.reload()
+}
+function displayDetails(){
+	if(document.getElementById("used_div").className=="hidden") {
+		document.getElementById("used_div").className="non-hidden";
+		document.getElementById("remain_div").className="non-hidden";
+	} else {
+		document.getElementById("used_div").className="hidden";
+		document.getElementById("remain_div").className="hidden";
+	}
+}
+	</script>
+	<div id="message_box">
+		<span id="msg_bar"></span>
+	</div>
+	<div id="init_box">
+		<span>Total Team Count: </span>
+		<input type="text" id="totalTeam" name="totalTeam"  value="17"/>
+		<input type="button" id="confirm" name="confirm"  value="confirm"
+		onclick="init()" />
+		<input type="button" id="resetAll" name="resetAll" disabled="disabled" value="Reset All"
+		onclick="resetAll()" />
+
+	</div>
+	<input type="button" id="start" name="start" value="start" disabled="disabled"
+		onclick="start()" />
+		<input type="button" id="stop" name="stop" disabled="disabled" value="stop"
+		onclick="stop()" />
+	
+	<div class="hidden">
+		<span id="label1" class="hidden" class="label">Result:</span><span id="output">
+		</span>
+	</div>
+	<input type="hidden" id="index" name="index" value="index" />
+<br/>
+<a href="#" onclick="displayDetails();return false;">Click to check used question number</a>
+	<input type="button" class="hidden" id="reset" name="reset" value="reset"
+		onclick="location.reload()" />
+	<div id="used_div" class="hidden">
+		<span id="label2" class="label">Used:</span><span id="used" class="label"></span>
+	</div>
+	<div id="remain_div" class="hidden">
+		<span id="label3" class="label" >Remaining:</span><span id="remain" class="label"></span>
+	</div>
+
+<div id="logo" class="logo">
+	<span id="qno" class="qno">01</span>
+</div>
+
+
+</body>
+</html>
